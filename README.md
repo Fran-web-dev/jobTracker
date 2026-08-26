@@ -1,20 +1,20 @@
 # JobTracker
 
-JobTracker es una aplicacion web para gestionar procesos de reclutamiento. Permite dar seguimiento a vacantes, candidatos, postulaciones, entrevistas, pipeline de seleccion y reportes desde una interfaz moderna construida con React.
+JobTracker is a web application for managing recruitment workflows. It helps teams track jobs, candidates, applications, interviews, hiring pipelines, and reports from a modern React interface.
 
-## Caracteristicas
+## Features
 
-- Autenticacion de usuarios y rutas protegidas.
-- Dashboard general del proceso de contratacion.
-- Gestion de vacantes y detalle de cada puesto.
-- Gestion de candidatos, empresas y postulaciones.
-- Pipeline de seleccion para organizar el avance de candidatos.
-- Calendario y modulo de entrevistas.
-- Sala de reunion para entrevistas.
-- Visor de resumes/CV.
-- Reportes y configuracion de usuario.
+- User authentication and protected routes.
+- Hiring dashboard with an overview of recruitment activity.
+- Job management and detailed job pages.
+- Candidate, company, and application management.
+- Hiring pipeline to organize candidate progress.
+- Calendar and interview management.
+- Interview meeting room.
+- Resume/CV viewer.
+- Reports and user settings.
 
-## Tecnologias
+## Tech Stack
 
 - React 19
 - Vite 8
@@ -27,40 +27,42 @@ JobTracker es una aplicacion web para gestionar procesos de reclutamiento. Permi
 
 ## Backend
 
-El frontend consume la API desplegada en:
+The frontend consumes the deployed API at:
 
 ```txt
 https://cutlet-infinite-cow.abasthan.app/
 ```
 
-La base de la API esta configurada en `src/utils/api.js`:
+API requests are proxied through relative frontend routes to avoid CORS issues in production. The API client is configured in `src/utils/api.js`:
 
 ```txt
-https://cutlet-infinite-cow.abasthan.app/api
+/api
 ```
 
-## Requisitos
+For Netlify deployments, `netlify.toml` forwards `/api/*`, `/health`, and `/uploads/*` to the deployed backend.
+
+## Requirements
 
 - Node.js
 - npm
 
-## Instalacion
+## Installation
 
-Clona el repositorio e instala las dependencias:
+Clone the repository and install dependencies:
 
 ```bash
 npm install
 ```
 
-## Desarrollo
+## Development
 
-Ejecuta el servidor local de Vite:
+Start the local Vite development server:
 
 ```bash
 npm run dev
 ```
 
-Luego abre la URL que muestre la terminal, normalmente:
+Then open the URL shown in the terminal, usually:
 
 ```txt
 http://localhost:5173
@@ -72,64 +74,64 @@ http://localhost:5173
 npm run dev
 ```
 
-Inicia el servidor de desarrollo.
+Starts the development server.
 
 ```bash
 npm run build
 ```
 
-Genera la version de produccion en `dist/`.
+Creates a production build in `dist/`.
 
 ```bash
 npm run preview
 ```
 
-Sirve localmente el build de produccion.
+Serves the production build locally.
 
 ```bash
 npm run lint
 ```
 
-Ejecuta ESLint sobre el proyecto.
+Runs ESLint across the project.
 
-## Estructura principal
+## Project Structure
 
 ```txt
 src/
-  components/   Componentes reutilizables
-  context/      Contexto de autenticacion
-  Hooks/        Hooks personalizados
-  pages/        Vistas principales de la aplicacion
-  utils/        Cliente y helpers de API
+  components/   Reusable UI components
+  context/      Authentication context
+  Hooks/        Custom hooks
+  pages/        Main application views
+  utils/        API client and helpers
 ```
 
-## Rutas principales
+## Main Routes
 
-- `/login` - Inicio de sesion.
+- `/login` - Sign in.
 - `/` - Dashboard.
-- `/jobs` - Vacantes.
-- `/jobs/:id` - Detalle de vacante.
-- `/applications` - Postulaciones.
-- `/candidates` - Candidatos.
-- `/companies` - Empresas.
-- `/pipelines` - Pipeline de seleccion.
-- `/calendar` - Calendario.
-- `/interviews` - Entrevistas.
-- `/call/:meetingId` - Sala de reunion.
-- `/resume-viewer` - Visor de CV.
-- `/reports` - Reportes.
-- `/settings` - Configuracion.
+- `/jobs` - Jobs.
+- `/jobs/:id` - Job details.
+- `/applications` - Applications.
+- `/candidates` - Candidates.
+- `/companies` - Companies.
+- `/pipelines` - Hiring pipeline.
+- `/calendar` - Calendar.
+- `/interviews` - Interviews.
+- `/call/:meetingId` - Meeting room.
+- `/resume-viewer` - Resume viewer.
+- `/reports` - Reports.
+- `/settings` - Settings.
 - `/talent` - Talent pool.
 
 ## Build
 
-Para generar una version lista para despliegue:
+Create a production-ready build:
 
 ```bash
 npm run build
 ```
 
-Los archivos finales se generan en:
+The final files are generated in:
 
 ```txt
 dist/
