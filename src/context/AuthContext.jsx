@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   apiRequest,
   clearAuthToken,
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, [token]);
 
-  const login = async ({ email, password }) => {
+  const login = useCallback(async ({ email, password }) => {
     const payload = await apiRequest("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
@@ -59,9 +59,9 @@ export const AuthProvider = ({ children }) => {
     });
     setToken(nextToken);
     return payload;
-  };
+  }, []);
 
-  const register = async ({ avatar, name, email, password, resume, resumeFile, role }) => {
+  const register = useCallback(async ({ avatar, name, email, password, resume, resumeFile, role }) => {
     const payload = await apiRequest("/auth/register", {
       method: "POST",
       body: JSON.stringify({
@@ -110,14 +110,14 @@ export const AuthProvider = ({ children }) => {
     }
 
     return payload;
-  };
+  }, []);
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     await apiRequest("/auth/logout", { method: "POST" }).catch(() => null);
     clearAuthToken();
     setToken("");
     setUser(null);
-  };
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -131,7 +131,7 @@ export const AuthProvider = ({ children }) => {
       token,
       user,
     }),
-    [loadingUser, token, user],
+    [loadingUser, login, logout, register, token, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

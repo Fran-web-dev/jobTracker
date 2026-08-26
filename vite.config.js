@@ -5,4 +5,11 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      "/api": "https://cutlet-infinite-cow.abasthan.app",
+      "/health": "https://cutlet-infinite-cow.abasthan.app",
+      "/uploads": "https://cutlet-infinite-cow.abasthan.app",
+    },
+  },
 });

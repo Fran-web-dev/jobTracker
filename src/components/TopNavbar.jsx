@@ -3,9 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import {
-  API_BASE_URL,
   apiRequest,
   getLocalAvatar,
+  resolveAssetUrl,
 } from "../utils/api";
 
 const MAX_RESUME_SIZE = 5 * 1024 * 1024;
@@ -17,7 +17,6 @@ export const TopNavbar = ({ name, actions }) => {
   const navigate = useNavigate();
   const displayName = user?.name ?? user?.email ?? "Frank";
   const avatar = user?.avatar || getLocalAvatar(user?.email);
-  const apiOrigin = API_BASE_URL.replace("/api", "");
   const avatarSrc = (() => {
     if (!avatar) {
       return "";
@@ -28,14 +27,14 @@ export const TopNavbar = ({ name, actions }) => {
     }
 
     if (avatar.startsWith("/")) {
-      return `${apiOrigin}${avatar}`;
+      return resolveAssetUrl(avatar);
     }
 
     if (avatar.startsWith("uploads/")) {
-      return `${apiOrigin}/${avatar}`;
+      return resolveAssetUrl(avatar);
     }
 
-    return `${apiOrigin}/uploads/avatars/${avatar}`;
+    return resolveAssetUrl(`/uploads/avatars/${avatar}`);
   })();
   const visibleAvatarSrc = avatarSrc === failedAvatarSrc ? "" : avatarSrc;
   const initials = displayName

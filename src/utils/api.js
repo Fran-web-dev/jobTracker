@@ -1,4 +1,4 @@
-export const API_BASE_URL = "https://cutlet-infinite-cow.abasthan.app/api";
+export const API_BASE_URL = "/api";
 export const AVATAR_STORAGE_PREFIX = "jobtracker-avatar:";
 export const API_ORIGIN = API_BASE_URL.replace("/api", "");
 
@@ -52,9 +52,7 @@ export const apiRequest = async (path, options = {}) => {
 };
 
 export const healthRequest = async () => {
-  const response = await fetch(
-    "https://cutlet-infinite-cow.abasthan.app/health",
-  );
+  const response = await fetch(`${API_ORIGIN}/health`);
   const payload = await response.json().catch(() => null);
 
   if (!response.ok) {

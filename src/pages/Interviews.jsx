@@ -2,7 +2,7 @@ import { Copy, ExternalLink, RefreshCw, Video } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageShell, Panel, SectionHeader } from "../components/PageShell";
-import { apiRequest, buildInterviewStartTime, buildMeetingUrl, isUpcomingInterview, mapCandidateFromApi, mapInterviewFromApi, mapJobFromApi, todayDateInputValue } from "../utils/api";
+import { apiRequest, buildMeetingUrl, isUpcomingInterview, mapCandidateFromApi, mapInterviewFromApi, mapJobFromApi } from "../utils/api";
 import { useAuth } from "../context/useAuth";
 
 const initialForm = {

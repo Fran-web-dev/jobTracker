@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { apiRequest } from "../utils/api";
 
-export const useApiResource = (path, mapper = (item) => item) => {
+const identity = (item) => item;
+
+export const useApiResource = (path, mapper = identity) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
-  const mapperRef = useRef(mapper);
-  mapperRef.current = mapper;
 
   const refresh = useCallback(() => {
     setRefreshKey((key) => key + 1);
@@ -25,7 +25,7 @@ export const useApiResource = (path, mapper = (item) => item) => {
           return;
         }
         const list = Array.isArray(payload) ? payload : [];
-        setData(list.map((item) => mapperRef.current(item)));
+        setData(list.map((item) => mapper(item)));
       } catch (requestError) {
         if (cancelled) {
           return;
@@ -44,7 +44,7 @@ export const useApiResource = (path, mapper = (item) => item) => {
     return () => {
       cancelled = true;
     };
-  }, [path, refreshKey]);
+  }, [mapper, path, refreshKey]);
 
   return { data, error, loading, refresh };
 };

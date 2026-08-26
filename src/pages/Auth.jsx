@@ -2,7 +2,12 @@ import { BriefcaseBusiness, FileText, ImagePlus, LogIn, UserPlus } from "lucide-
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import { API_BASE_URL, apiRequest, saveLocalAvatar } from "../utils/api";
+import {
+  API_BASE_URL,
+  apiRequest,
+  resolveAssetUrl,
+  saveLocalAvatar,
+} from "../utils/api";
 
 const initialForm = {
   avatar: "",
@@ -13,12 +18,14 @@ const initialForm = {
   role: "recruiter",
 };
 
+const createInitialForm = () => ({ ...initialForm });
+
 const MAX_AVATAR_SIZE = 2 * 1024 * 1024;
 const MAX_RESUME_SIZE = 5 * 1024 * 1024;
 
 export const Auth = () => {
   const [mode, setMode] = useState("login");
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = useState(createInitialForm);
   const [avatarPath, setAvatarPath] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("");
   const [resumeName, setResumeName] = useState("");
@@ -36,6 +43,14 @@ export const Auth = () => {
 
   const isRegister = mode === "register";
 
+  const resetRegisterState = () => {
+    setForm(createInitialForm());
+    setAvatarPath("");
+    setAvatarPreview("");
+    setResumeName("");
+    setResumeFile(null);
+  };
+
   const updateField = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));
     if (field === "email" || field === "name") {
@@ -52,7 +67,7 @@ export const Auth = () => {
       return avatar;
     }
 
-    return `${API_BASE_URL.replace("/api", "")}${avatar}`;
+    return resolveAssetUrl(avatar);
   };
 
   const selectAvatar = (event) => {
@@ -172,7 +187,6 @@ export const Auth = () => {
   const submitAuth = async (event) => {
     event.preventDefault();
     const email = form.email.trim().toLowerCase();
-    const shouldClearRegisterForm = isRegister;
 
     try {
       setLoading(true);
@@ -185,11 +199,7 @@ export const Auth = () => {
         }
 
         await register({ ...form, resumeFile });
-        setForm(initialForm);
-        setAvatarPath("");
-        setAvatarPreview("");
-        setResumeName("");
-        setResumeFile(null);
+        resetRegisterState();
       } else {
         await login({ email: form.email, password: form.password });
       }
@@ -212,13 +222,6 @@ export const Auth = () => {
         setError(requestError.message);
       }
     } finally {
-      if (shouldClearRegisterForm) {
-        setForm(initialForm);
-        setAvatarPath("");
-        setAvatarPreview("");
-        setResumeName("");
-        setResumeFile(null);
-      }
       setLoading(false);
     }
   };
