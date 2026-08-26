@@ -44,14 +44,14 @@ For Netlify deployments, `netlify.toml` forwards `/api/*`, `/health`, and `/uplo
 ## Requirements
 
 - Node.js
-- npm
+- pnpm
 
 ## Installation
 
 Clone the repository and install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Development
@@ -59,7 +59,7 @@ npm install
 Start the local Vite development server:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Then open the URL shown in the terminal, usually:
@@ -71,25 +71,25 @@ http://localhost:5173
 ## Scripts
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Starts the development server.
 
 ```bash
-npm run build
+pnpm build
 ```
 
 Creates a production build in `dist/`.
 
 ```bash
-npm run preview
+pnpm preview
 ```
 
 Serves the production build locally.
 
 ```bash
-npm run lint
+pnpm lint
 ```
 
 Runs ESLint across the project.
@@ -128,7 +128,7 @@ src/
 Create a production-ready build:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 The final files are generated in:
