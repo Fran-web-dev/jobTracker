@@ -10,6 +10,7 @@ export const ResumeViewer = () => {
   const candidateName = searchParams.get("name") || "Candidate";
   const resumeName = searchParams.get("resume") || "";
   const viewerUrl = isSafeDocumentUrl(resumeUrl) ? resumeUrl : "";
+  const isPdf = /\.pdf($|\?)/i.test(viewerUrl);
 
   return (
     <PageShell
@@ -60,12 +61,33 @@ export const ResumeViewer = () => {
               Open file
             </a>
           </div>
-          <iframe
-            className="h-[76vh] w-full border-0 bg-white"
-            sandbox="allow-downloads allow-same-origin"
-            src={viewerUrl}
-            title={`${candidateName} CV`}
-          />
+          {isPdf ? (
+            <iframe
+              className="h-[76vh] w-full border-0 bg-white"
+              sandbox="allow-downloads allow-same-origin"
+              src={viewerUrl}
+              title={`${candidateName} CV`}
+            />
+          ) : (
+            <div className="flex min-h-[42vh] flex-col items-center justify-center gap-4 p-8 text-center">
+              <FileText className="text-cyan-300" size={40} />
+              <div>
+                <h2 className="text-lg font-semibold text-white">Preview not available</h2>
+                <p className="mt-2 max-w-md text-sm leading-6 text-slate-400">
+                  This CV format cannot be previewed in the browser. Open the file to read it.
+                </p>
+              </div>
+              <a
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+                href={viewerUrl}
+                rel="noreferrer"
+                target="_blank"
+              >
+                <ExternalLink size={16} />
+                Open file
+              </a>
+            </div>
+          )}
         </Panel>
       )}
 

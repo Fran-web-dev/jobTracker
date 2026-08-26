@@ -1,4 +1,5 @@
 import { Eye, FileText } from "lucide-react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Card } from "../components/Card";
 import { PageShell, Panel, SectionHeader } from "../components/PageShell";
@@ -9,25 +10,42 @@ import {
   isUpcomingInterview,
   mapInterviewFromApi,
   mapJobFromApi,
-  resolveAssetUrl,
+  resolveResumeUrl,
 } from "../utils/api";
 import { useAuth } from "../context/useAuth";
 
 export const Dashboard = () => {
   const { isCandidate, user } = useAuth();
-  const { data: jobs, loading: loadingJobs, error: jobsError } = useApiResource("/jobs", mapJobFromApi);
-  const { data: candidates, loading: loadingCandidates } = useApiResource("/candidates", mapCandidateFromApi);
-  const { data: applications, loading: loadingApplications } = useApiResource(isCandidate ? "/applications/me" : "/applications", mapApplicationFromApi);
+  const { data: jobs, loading: loadingJobs, error: jobsError } = useApiResource(
+    isCandidate ? null : "/jobs",
+    mapJobFromApi,
+  );
+  const { data: candidates, loading: loadingCandidates } = useApiResource(
+    isCandidate ? null : "/candidates",
+    mapCandidateFromApi,
+  );
+  const { data: currentCandidate, loading: loadingCandidate } = useApiResource(
+    isCandidate ? "/candidates/me" : null,
+    mapCandidateFromApi,
+    { single: true },
+  );
+  const { data: applications, loading: loadingApplications } = useApiResource(
+    isCandidate ? null : "/applications",
+    mapApplicationFromApi,
+  );
   const { data: interviews, loading: loadingInterviews } = useApiResource("/interviews", mapInterviewFromApi);
 
   const loading =
     loadingJobs || loadingCandidates || loadingApplications || loadingInterviews;
-  const openJobs = jobs.filter((job) => job.state?.toLowerCase() === "open").length;
-  const upcomingInterviews = interviews.filter(isUpcomingInterview);
-  const scheduledInterviews = upcomingInterviews.length;
-  const currentCandidate = candidates.find(
-    (candidate) => candidate.email?.toLowerCase() === user?.email?.toLowerCase(),
+  const openJobs = useMemo(
+    () => jobs.filter((job) => job.state?.toLowerCase() === "open").length,
+    [jobs],
   );
+  const upcomingInterviews = useMemo(
+    () => interviews.filter(isUpcomingInterview),
+    [interviews],
+  );
+  const scheduledInterviews = upcomingInterviews.length;
 
   if (isCandidate) {
     return (
@@ -38,7 +56,9 @@ export const Dashboard = () => {
           description="Review your upcoming interviews and join scheduled calls from one focused place."
         />
 
-        {loadingInterviews && <p className="text-sm text-slate-500">Loading your interviews...</p>}
+        {(loadingInterviews || loadingCandidate) && (
+          <p className="text-sm text-slate-500">Loading your workspace...</p>
+        )}
 
         <section className="grid gap-4 md:grid-cols-2">
           <Card title="Scheduled interviews" hint="Upcoming conversations">{scheduledInterviews}</Card>
@@ -61,7 +81,7 @@ export const Dashboard = () => {
             {currentCandidate?.resume && (
               <Link
                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
-                to={`/resume-viewer?url=${encodeURIComponent(resolveAssetUrl(currentCandidate.resume))}&name=${encodeURIComponent(currentCandidate.name || user?.name || "Candidate")}&email=${encodeURIComponent(currentCandidate.email || user?.email || "")}&resume=${encodeURIComponent(currentCandidate.resume)}`}
+                to={`/resume-viewer?url=${encodeURIComponent(resolveResumeUrl(currentCandidate.resume))}&name=${encodeURIComponent(currentCandidate.name || user?.name || "Candidate")}&email=${encodeURIComponent(currentCandidate.email || user?.email || "")}&resume=${encodeURIComponent(currentCandidate.resume)}`}
               >
                 <Eye size={16} />
                 View CV

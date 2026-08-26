@@ -2,7 +2,7 @@ import { Eye, Mail, ScrollText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PageShell, Panel, SectionHeader } from "../components/PageShell";
 import { useApiResource } from "../Hooks/useApiResource";
-import { mapCandidateFromApi, resolveAssetUrl } from "../utils/api";
+import { mapCandidateFromApi, resolveResumeUrl } from "../utils/api";
 
 export const Candidates = () => {
   const { data: candidates, loading, error } = useApiResource(
@@ -41,7 +41,7 @@ export const Candidates = () => {
                 {candidate.resume && (
                   <Link
                     className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-cyan-400 px-3 py-2 text-xs font-semibold text-slate-950 transition hover:bg-cyan-300"
-                    to={`/resume-viewer?url=${encodeURIComponent(resolveAssetUrl(candidate.resume))}&name=${encodeURIComponent(candidate.name)}&email=${encodeURIComponent(candidate.email)}&resume=${encodeURIComponent(candidate.resume)}`}
+                    to={`/resume-viewer?url=${encodeURIComponent(resolveResumeUrl(candidate.resume))}&name=${encodeURIComponent(candidate.name)}&email=${encodeURIComponent(candidate.email)}&resume=${encodeURIComponent(candidate.resume)}`}
                   >
                     <Eye size={14} />
                     View resume

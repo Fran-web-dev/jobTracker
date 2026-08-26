@@ -200,18 +200,36 @@ export const resolveAssetUrl = (assetPath) => {
   return `${API_ORIGIN}/${assetPath.replace(/^\.?\//, "")}`;
 };
 
+export const resolveResumeUrl = (resumePath) => {
+  if (!resumePath) {
+    return "";
+  }
+
+  if (
+    resumePath.startsWith("http") ||
+    resumePath.startsWith("/") ||
+    resumePath.startsWith("uploads/")
+  ) {
+    return resolveAssetUrl(resumePath);
+  }
+
+  return resolveAssetUrl(`/uploads/resumes/${resumePath.replace(/^\.?\//, "")}`);
+};
+
 export const isSafeDocumentUrl = (url) => {
   if (!url) {
     return false;
   }
 
   try {
-    const parsedUrl = new URL(url);
-    const apiOrigin = new URL(API_ORIGIN).origin;
-    return (
-      parsedUrl.origin === apiOrigin &&
-      parsedUrl.pathname.startsWith("/uploads/")
-    );
+    const currentOrigin = globalThis.location?.origin ?? "http://localhost";
+    const parsedUrl = new URL(url, currentOrigin);
+    const allowedOrigins = new Set([
+      currentOrigin,
+      "https://cutlet-infinite-cow.abasthan.app",
+    ]);
+
+    return allowedOrigins.has(parsedUrl.origin) && parsedUrl.pathname.startsWith("/uploads/");
   } catch {
     return false;
   }
