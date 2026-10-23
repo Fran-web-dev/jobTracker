@@ -20,14 +20,16 @@ export const AuthProvider = ({ children }) => {
     const loadUser = async () => {
       try {
         setLoadingUser(true);
+        // Solo cargar usuario si hay un token JWT válido
+        if (!token) {
+          setUser(null);
+          return;
+        }
         const currentUser = await apiRequest("/auth/me");
         setUser({
           ...currentUser,
           avatar: currentUser?.avatar || getLocalAvatar(currentUser?.email),
         });
-        if (!token) {
-          setToken("cookie-auth");
-        }
       } catch {
         clearAuthToken();
         setToken("");

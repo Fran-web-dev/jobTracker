@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 
 export const ProtectedRoute = ({ allowedRoles }) => {
-  const { isAuthenticated, loadingUser, user } = useAuth();
+  const { isAuthenticated, loadingUser, user, token } = useAuth();
 
   if (loadingUser) {
     return (
@@ -12,7 +12,8 @@ export const ProtectedRoute = ({ allowedRoles }) => {
     );
   }
 
-  if (!isAuthenticated) {
+  // Requerir token JWT real, no solo autenticación por cookies
+  if (!isAuthenticated || !token) {
     return <Navigate replace to="/login" />;
   }
 
